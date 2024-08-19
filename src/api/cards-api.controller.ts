@@ -78,6 +78,14 @@ export class CardsApiController {
         });
     };
 
+    @Get(":cardId/comments")
+    @ApiOperation({ summary: 'Получение всех комментариев карточки', description: 'Получение всех комментариев карточки с указанным ID' })
+    @ApiResponse({ status: 200, description: 'Сервер вернул все комментарии карточки с указанным ID' })
+    @ApiResponse({ status: 500, description: 'Ошибка сервера' })
+    getCommentsOfCard(@Param() { cardId }: ValidCardId): object | string {
+        return Comment.findAll({ where: { cardId } }) || [];
+    };
+
     @Post(":cardId/comments")
     @ApiOperation({ summary: 'Добавление комментария к карточке', description: 'Создает новый комментарий для карточки с указанным ID' })
     @ApiResponse({ status: 201, description: 'Комментарий успешно добавлен', schema: { example: { message: 'Successfully posted comment with id 1' } } })

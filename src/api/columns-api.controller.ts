@@ -62,6 +62,14 @@ export class ColumnsAPiController {
         });
     };
 
+    @Get(":columnId/cards")
+    @ApiOperation({ summary: 'Получение всех карточек колонки', description: 'Возвращает все карточки колонки с указанным ID' })
+    @ApiResponse({ status: 200, description: 'Сервер вернул все карточки колонки с указанным ID' })
+    @ApiResponse({ status: 500, description: 'Ошибка сервера' })
+    getCardsOfColumn(@Param() { columnId }: ValidColumnId): object | string {
+        return Card.findAll({ where: { columnId } }) || [];
+    };
+
     @Post(":columnId/cards")
     @ApiOperation({ summary: 'Создание карточки в колонке', description: 'Создает новую карточку в указанной колонке' })
     @ApiResponse({ status: 201, description: 'Успешно создана карточка', schema: { example: { message: 'Successfully created card with id 1' } } }) // Описание успешного ответа
