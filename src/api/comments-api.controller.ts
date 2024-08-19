@@ -7,6 +7,8 @@ import { RolesGuard } from "src/guards/roles.guard";
 import { Comment } from "db/db";
 import { ValidCommentId, ValidCommentText } from "./validators";
 
+import { CommentDto } from "src/dto/comment.dto";
+
 @Controller("/api/comments")
 @ApiTags("Comments")
 @UseGuards(RolesGuard)
@@ -14,7 +16,7 @@ export class CommentsApiController {
     @Get()
     @Roles(["admin"])
     @ApiOperation({ summary: 'Получение всех комментариев', description: 'Возвращает список всех комментариев' })
-    @ApiResponse({ status: 200, description: 'Список комментариев успешно получен' })
+    @ApiResponse({ status: 200, description: 'Список комментариев успешно получен', type: [CommentDto] })
     @ApiResponse({ status: 403, description: 'Доступ запрещен. Требуются права администратора' })
     getAllComments(): object | string {
         return Comment.findAll();
@@ -22,7 +24,7 @@ export class CommentsApiController {
 
     @Get(":commentId")
     @ApiOperation({ summary: 'Получение комментария по ID', description: 'Возвращает комментарий с указанным ID' })
-    @ApiResponse({ status: 200, description: 'Комментарий успешно найден' })
+    @ApiResponse({ status: 200, description: 'Комментарий успешно найден', type: CommentDto })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getCommentById(@Param() { commentId }: ValidCommentId): object | string {
         return Comment.findOne({ where: { id: commentId } });

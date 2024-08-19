@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle("Purrweb API")
     .setDescription("API по тз для Purrweb")
     .addTag("Purrweb")
+    .setVersion("1.0.1")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api_docs", app, document);

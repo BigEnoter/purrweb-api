@@ -8,6 +8,9 @@ import { RolesGuard } from "src/guards/roles.guard";
 import { Card, Comment, User } from "db/db";
 import { ValidCardId, ValidCardTitle, ValidCardText, ValidCommentText } from "./validators";
 
+import { CardDto } from "src/dto/card.dto";
+import { CommentDto } from "src/dto/comment.dto";
+
 @Controller("/api/cards")
 @ApiTags("Cards")
 @UseGuards(RolesGuard)
@@ -15,7 +18,7 @@ export class CardsApiController {
     @Get("/")
     @Roles(["admin"])
     @ApiOperation({ summary: 'Получение всех карточек', description: 'Возвращает список всех карточек в системе' })
-    @ApiResponse({ status: 200, description: 'Список карточек успешно получен' })
+    @ApiResponse({ status: 200, description: 'Список карточек успешно получен', type: [CardDto] })
     @ApiResponse({ status: 403, description: 'Доступ запрещен. Требуются права администратора' })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getAllCards(): object | string {
@@ -24,7 +27,7 @@ export class CardsApiController {
 
     @Get(":cardId")
     @ApiOperation({ summary: 'Получение карточки по ID', description: 'Возвращает карточку с указанным ID' })
-    @ApiResponse({ status: 200, description: 'Карточка успешно найдена' })
+    @ApiResponse({ status: 200, description: 'Карточка успешно найдена', type: CardDto })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getCardById(@Param() { cardId }: ValidCardId): object | string {
         return Card.findOne({ where: { id: cardId } });
@@ -80,7 +83,7 @@ export class CardsApiController {
 
     @Get(":cardId/comments")
     @ApiOperation({ summary: 'Получение всех комментариев карточки', description: 'Получение всех комментариев карточки с указанным ID' })
-    @ApiResponse({ status: 200, description: 'Сервер вернул все комментарии карточки с указанным ID' })
+    @ApiResponse({ status: 200, description: 'Сервер вернул все комментарии карточки с указанным ID', type: [CommentDto] })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getCommentsOfCard(@Param() { cardId }: ValidCardId): object | string {
         return Comment.findAll({ where: { cardId } }) || [];

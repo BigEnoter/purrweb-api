@@ -7,11 +7,14 @@ import { User, Column } from "../../db/db";
 
 import { ValidId, ValidUserCredentials, ValidColumnData } from "./validators";
 
+import { UserDto } from "src/dto/user.dto";
+import { ColumnDto } from "src/dto/column.dto";
+
 @Controller('api/users')
 @ApiTags("User")
 export class UserApiController {
     @Get()
-    @ApiResponse({ "status": 200, description: "Пользователи успешно получены" })
+    @ApiResponse({ "status": 200, description: "Пользователи успешно получены", type: [UserDto] })
     @ApiResponse({ "status": 500, description: "Ошибка сервера" })
     @ApiOperation({ summary: "Получение списка всех пользователей", description: "Возвращает список всех пользователей с их ID и почтой" })
     findAll(): object | string {
@@ -41,7 +44,7 @@ export class UserApiController {
 
     @Get(":id")
     @ApiOperation({ summary: 'Получение пользователя по ID', description: 'Возвращает информацию о пользователе по указанному ID' })
-    @ApiResponse({ status: 200, description: 'Пользователь найден (а может быть и нет)' })
+    @ApiResponse({ status: 200, description: 'Пользователь найден (а может быть и нет)', type: UserDto })
     @ApiResponse({ status: 400, description: 'Ошибка валидации ID' })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getUserById(@Param() { id }: ValidId): object {
@@ -112,7 +115,7 @@ export class UserApiController {
 
     @Get(":id/columns")
     @ApiOperation({ summary: 'Получение колонок пользователя', description: 'Возвращает все колонки, принадлежащие пользователю с указанным ID' })
-    @ApiResponse({ status: 200, description: 'Список колонок пользователя' })
+    @ApiResponse({ status: 200, description: 'Список колонок пользователя', type: [ColumnDto] })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getUserColumns(@Param() { id }: ValidId): object {
         return Column.findAll({ where: { ownerId: id } }).then((columns) => {

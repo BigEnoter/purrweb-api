@@ -8,6 +8,9 @@ import { RolesGuard } from "src/guards/roles.guard";
 import { ValidColumnUpdate, ValidColumnId, ValidCardData } from "./validators";
 import { Column, Card, User } from "db/db";
 
+import { ColumnDto } from "src/dto/column.dto";
+import { CardDto } from "src/dto/card.dto";
+
 @Controller("/api/columns")
 @ApiTags("Columns")
 @UseGuards(RolesGuard)
@@ -15,7 +18,7 @@ export class ColumnsAPiController {
     @Get("/")
     @Roles(['admin'])
     @ApiOperation({ summary: 'Получение всех колонок', description: 'Возвращает список всех колонок' })
-    @ApiResponse({ status: 200, description: 'Список колонок успешно получен' })
+    @ApiResponse({ status: 200, description: 'Список колонок успешно получен', type: [ColumnDto] })
     @ApiResponse({ status: 403, description: 'Доступ запрещен. Требуются права администратора' })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getAllColumns(): object | string {
@@ -24,7 +27,7 @@ export class ColumnsAPiController {
 
     @Get(":columnId")
     @ApiOperation({ summary: 'Получение колонки по ID', description: 'Возвращает колонку с указанным идентификатором' })
-    @ApiResponse({ status: 200, description: 'Колонка успешно найдена' })
+    @ApiResponse({ status: 200, description: 'Колонка успешно найдена', type: ColumnDto })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getColumnById(@Param() { columnId }: ValidColumnId): object | string {
         return Column.findOne({ where: { id: columnId } });
@@ -64,7 +67,7 @@ export class ColumnsAPiController {
 
     @Get(":columnId/cards")
     @ApiOperation({ summary: 'Получение всех карточек колонки', description: 'Возвращает все карточки колонки с указанным ID' })
-    @ApiResponse({ status: 200, description: 'Сервер вернул все карточки колонки с указанным ID' })
+    @ApiResponse({ status: 200, description: 'Сервер вернул все карточки колонки с указанным ID', type: [CardDto] })
     @ApiResponse({ status: 500, description: 'Ошибка сервера' })
     getCardsOfColumn(@Param() { columnId }: ValidColumnId): object | string {
         return Card.findAll({ where: { columnId } }) || [];

@@ -113,18 +113,26 @@ const Comment = sequelize.define(
 
 User.sync().then(() => {
     console.log("User model synced");
+}).catch((e: Error) => {
+    console.log("Something went wrong trying to sync User model", e.name);
 });
 
 Column.sync().then(() => {
     console.log("Column model synced");
+}).catch((e: Error) => {
+    console.log("Something went wrong trying to sync Column model", e.name);
 });
 
 Card.sync().then(() => {
     console.log("Card model synced");
+}).catch((e: Error) => {
+    console.log("Something went wrong trying to sync Card model", e.name);
 });
 
 Comment.sync().then(() => {
     console.log("Comment model synced");
+}).catch((e: Error) => {
+    console.log("Something went wrong trying to sync Comment model", e.name);
 });
 
 User.hasMany(Column, { foreignKey: 'ownerId' });
